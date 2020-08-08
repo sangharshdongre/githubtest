@@ -25,7 +25,7 @@
         },
         "keyVaultName": {
           "type": "string",
-          "defaultValue": "[concat('ml-keyval-',uniqueString(resourceGroup().id))]",
+          "defaultValue": "[concat('mlkeyval-',uniqueString(resourceGroup().id))]",
           "metadata": {
             "description": "The name for the key vault to created and associated with the workspace."
           }
