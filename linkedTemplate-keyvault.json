@@ -11,7 +11,7 @@
         },
         "keyVaultName": {
             "type": "string",
-            "defaultValue": "aipkeyvault",
+            "defaultValue": "aipkeyvault1",
             "metadata": {
               "description": "Specifies the name of the key vault."
             }
@@ -97,7 +97,7 @@
             "defaultValue": {
               "secrets": [
                 {
-                  "secretName": "aip",
+                  "secretName": "aipsecret1",
                   "secretValue": "[concat('Aip_P@$$w0rd!')]"
                 }
               ]
@@ -169,7 +169,7 @@
 		},
     "keyvaultsecretname": {
       "type": "string",
-      "value": ""
+      "value": "[parameters('secretsObject').secrets.secretName]"
     }
 	}
 }
