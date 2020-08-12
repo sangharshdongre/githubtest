@@ -1,0 +1,252 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlserver-name": {
+            "type": "string",
+            "defaultValue": "[concat('aipsqlser-',uniqueString(resourceGroup().id))]",
+            "metadata": {
+                "description": "Azure SQL Server name. Must be globally unique."
+            }
+        },
+        "sqldatabase-name": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure SQL database name."
+            }
+        },
+        "sqlAdministratorLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "The admin user of the SQL Server"
+            }
+        },
+        "sqlAdministratorLoginPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password of the admin user of the SQL Server"
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "defaultValue": "aipkeyvault",
+            "metadata": {
+                "description": "Specifies the name of the key vault."
+            }
+        },
+        "enabledForDeployment": {
+            "type": "bool",
+            "defaultValue": false,
+            "allowedValues": [
+                true,
+                false
+            ],
+            "metadata": {
+                "description": "Specifies whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault."
+            }
+        },
+        "enabledForDiskEncryption": {
+            "type": "bool",
+            "defaultValue": false,
+            "allowedValues": [
+                true,
+                false
+            ],
+            "metadata": {
+                "description": "Specifies whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys."
+            }
+        },
+        "enabledForTemplateDeployment": {
+            "type": "bool",
+            "defaultValue": true,
+            "allowedValues": [
+                true,
+                false
+            ],
+            "metadata": {
+                "description": "Specifies whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
+            }
+                },
+        "tenantId": {
+            "type": "string",
+            "defaultValue": "[subscription().tenantId]",
+            "metadata": {
+                "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+            }
+        },
+        "objectId": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+            }
+                },
+        "keysPermissions": {
+            "type": "array",
+            "defaultValue": [
+                "list"
+            ],
+            "metadata": {
+                "description": "Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge."
+            }
+        },
+        "secretsPermissions": {
+            "type": "array",
+            "defaultValue": [
+                "list", "get"
+            ],
+            "metadata": {
+                "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "metadata": {
+                "description": "Specifies whether the key vault is a standard vault or a premium vault."
+            }
+        },
+        "dbpasswordsecretName": {
+            "type": "string",
+            "defaultValue": "aip-sqldbpass"
+        },
+        "secretsObject": {
+            "type": "secureObject",
+            "defaultValue": {
+                "secrets": [
+                    {
+                        "secretName": "aip",
+                        "secretValue": "Aip_P@$$w0rd!"
+                    }
+                ]
+            },
+            "metadata": {
+                "description": "Specifies all secrets {\"secretName\":\"\",\"secretValue\":\"\"} wrapped in a secure object."
+            }
+        },
+        "vaultSubscription": {
+            "type": "string",
+            "defaultValue": "[subscription().subscriptionId]",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vaultResourceGroup": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().name]",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "existingKeyVaultId" : {
+            "type": "string",
+            "defaultValue": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+            "metadata": {
+                "description": "Pre-existing Key Vault for source certs and secrets. Not the key vault for this application solution."
+            }    
+        },
+        "existingKeyVaultSecretName" : {
+            "type": "string",
+            "metadata": {
+                "description": "Pre-existing Key Vault secret for source certs and secrets. Not the key vault for this application solution."
+            }    
+        }
+    },
+    "variables": {
+        "sqlserverName": "[concat(parameters('sqlserver-name'), '-', uniqueString(resourceGroup().id))]",
+        "databaseName": "[concat(parameters('sqldatabase-name'))]",
+        "keyvaultName": "[concat(parameters('keyVaultName'))]",
+        "dbpasswordsecretName": "aipdemo1sqldbpassword",
+        "SQLconnectionstring":""
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-05-01",
+            "name": "linkedTemplate-keyvault",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'linkedTemplate-keyvault.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('keyvaultName')]"
+                    },
+                    "objectId": {
+                        "value": "[parameters('objectId')]"
+                    },
+                    "enabledForTemplateDeployment": {
+                        "value": true
+                    },
+                    "secretsObject": {
+                        "value": {
+                            "secrets": [
+                                {
+                                    "secretName": "[variables('dbpasswordsecretName')]",
+                                    "secretValue": "[parameters('sqlAdministratorLoginPassword')]"
+                                }
+                            ]
+                        }
+                    }        
+                }
+            }
+        },
+        {
+            "apiVersion": "2018-05-01",
+            "name": "linkedTemplate-sqlserver",
+            "type": "Microsoft.Resources/deployments",
+            "dependsOn": ["linkedTemplate-keyvault"],
+            "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'linkedTemplate-sqlserver.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "sqlserver-name": {
+                        "value": "[parameters('sqlserver-name')]"
+                    },
+                    "sqldatabase-name": {
+                        "value": "[parameters('sqldatabase-name')]"
+                    },
+                    "sqlAdministratorLogin": {
+                        "value": "[parameters('sqlAdministratorLogin')]"
+                    },
+                    "sqlAdministratorLoginPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[reference('linkedTemplate-keyvault').outputs.aipkeyvault.value]" 
+                            },
+                            "secretName": "[variables('dbpasswordsecretName')]"
+                        }
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }  
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "sqlSvrFqdn": {
+            "type": "string",
+            "value": "[reference('linkedTemplate-sqlserver').outputs.dbfqdn.value]"
+        },
+        "resourceGroupName": {
+            "type": "string",
+            "value": "[resourceGroup().Name]"
+        }
+    }
+}
