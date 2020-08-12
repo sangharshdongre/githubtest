@@ -2,13 +2,13 @@
 	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
 	"contentVersion": "1.0.0.0",
 	"parameters": { 
-        "sqlserver-name": {
+        "sqlservername": {
             "type": "string",
             "metadata": {
             "description": "Azure SQL Server name. Must be globally unique."
             }
         },
-        "sqldatabase-name": {
+        "sqldatabasename": {
             "type": "string",
             "metadata": {
             "description": "Azure SQL database name."
@@ -35,8 +35,8 @@
           }
     },
 	"variables": {
-        "sqlserverName": "[concat(parameters('sqlserver-name'), '-', uniqueString(resourceGroup().id))]",
-        "databaseName": "[concat(parameters('sqldatabase-name'))]"
+        "sqlserverName": "[concat(parameters('sqlservername'), '-', uniqueString(resourceGroup().id))]",
+        "databaseName": "[concat(parameters('sqldatabasename'))]"
     },
 	"resources": [
       {
