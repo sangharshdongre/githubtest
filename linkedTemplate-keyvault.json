@@ -158,7 +158,10 @@
                 "count": "[length(parameters('secretsObject').secrets)]"
             },
             "properties": {
-                "value": "[parameters('secretsObject').secrets[copyIndex()].secretValue]"
+                "value": "[parameters('secretsObject').secrets[copyIndex()].secretValue]",
+                "attributes": {
+                  "enabled": true
+                }
             }
         }
     ],
