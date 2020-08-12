@@ -11,7 +11,7 @@
         },
         "keyVaultName": {
             "type": "string",
-            "defaultValue": "aipkeyvault2",
+            "defaultValue": "aipkeyvault3",
             "metadata": {
               "description": "Specifies the name of the key vault."
             }
@@ -166,10 +166,6 @@
 		"aipkeyvault": {
 			"value": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
 			"type" : "string"
-		},
-    "keyvaultsecretname": {
-      "type": "string",
-      "value": "[parameters('secretsObject').secrets.secretName]"
-    }
+		}
 	}
 }
