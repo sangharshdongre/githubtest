@@ -50,7 +50,7 @@
         }
     },
     "variables": {
-        "adlstorageaccname": "[concat(parameters('storageAccountName'),'-',uniqueString(resourceGroup().id))]"
+        "adlstorageaccname": "[concat(parameters('storageAccountName'),uniqueString(resourceGroup().id))]"
     },
     "resources": [
         {
