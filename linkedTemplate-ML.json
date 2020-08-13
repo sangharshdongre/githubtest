@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "workspaceName": {
-      "defaultValue": "[concat('wrkspce-',uniqueString(resourceGroup().Id))]",
+      "defaultValue": "[concat('mlworkspace-',uniqueString(resourceGroup().Id))]",
       "type": "string",
       "metadata": {
         "description": "Specifies the name of the Azure Machine Learning workspace."
@@ -95,6 +95,7 @@
     },
     "adbWorkspace": {
       "type": "string",
+      "defaultValue": "aipadbwrkspce",
       "metadata": {
         "description": "Azure Databrick workspace to be linked to the workspace"
       }
