@@ -54,7 +54,7 @@
     },
     "keyVaultName": {
       "type": "string",
-      "defaultValue": "[resourceId('subscription().id', 'resourceGroup().name', 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+      "defaultValue": "[reference(resourceId('subscription().id', 'resourceGroup().name', 'Microsoft.KeyVault/vaults', parameters('keyVaultName')))]",
       "metadata": {
         "description": "Name of the key vault."
       }
@@ -211,7 +211,6 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "[variables('storageAccount')]",
-        "[variables('keyVault')]",
         "[variables('applicationInsights')]",
         "[variables('containerRegistry')]"
       ],
