@@ -47,7 +47,7 @@
     "outputs": {
       "adbWorkspace": {
         "type": "object",
-        "value": "[reference(deployment().name).outputs.workspaces.value]"
+        "value": "[reference(deployment().name).outputs.adbWorkspace.value]"
       }
     }
   }
