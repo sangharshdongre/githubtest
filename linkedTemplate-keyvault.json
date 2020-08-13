@@ -180,7 +180,7 @@
         },
         {
           "type": "Microsoft.KeyVault/vaults/secrets",
-          "name": "[concat(parameters('keyVaultName'), '/', parameters('mlSecretsObject').secrets[copyIndex(1)].secretName)]",
+          "name": "[concat(parameters('keyVaultName'), '/', parameters('mlSecretsObject').secrets[copyIndex()].secretName)]",
           "apiVersion": "2016-10-01",
           "dependsOn": [
               "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
@@ -190,7 +190,7 @@
               "count": "[length(parameters('mlSecretsObject').secrets)]"
           },
           "properties": {
-              "value": "[parameters('mlSecretsObject').secrets[copyIndex(1)].secretValue]",
+              "value": "[parameters('mlSecretsObject').secrets[copyIndex()].secretValue]",
               "attributes": {
                 "enabled": true
               }
