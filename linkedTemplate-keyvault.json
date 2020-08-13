@@ -81,6 +81,15 @@
               "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
             }
         },
+        "certificatesPermissions": {
+          "type": "array",
+          "defaultValue": [
+            "All"
+          ],
+          "metadata": {
+            "description": "description"
+          }
+        },
         "skuName": {
             "type": "string",
             "defaultValue": "Standard",
@@ -98,7 +107,7 @@
               "secrets": [
                 {
                   "secretName": "aipsecret1",
-                  "secretValue": "[concat('Aip_P@$$w0rd!')]"
+                  "secretValue": "[concat('Aip_P@ssw0rd!')]"
                 }
               ]
             },
@@ -112,7 +121,7 @@
               "secrets": [
                 {
                   "secretName": "aipsecret1",
-                  "secretValue": "[concat('Aip_P@$$w0rd!')]"
+                  "secretValue": "[concat('Aip_P@ssw0rd!')]"
                 }
               ]
             },
@@ -144,7 +153,8 @@
                       "tenantId": "[parameters('tenantId')]",
                       "permissions": {
                           "keys": "[parameters('keysPermissions')]",
-                          "secrets": "[parameters('secretsPermissions')]"
+                          "secrets": "[parameters('secretsPermissions')]",
+                          "certificates": "[parameters('certificatesPermissions')]"
                       }
                   }
               ],
