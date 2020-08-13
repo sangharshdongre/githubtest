@@ -54,7 +54,6 @@
     },
     "keyVaultName": {
       "type": "string",
-      "defaultValue": "[reference(resourceId('subscription().id', 'resourceGroup().name', 'Microsoft.KeyVault/vaults', parameters('keyVaultName')))]",
       "metadata": {
         "description": "Name of the key vault."
       }
@@ -73,18 +72,6 @@
     "applicationInsightsResourceGroupName": {
       "type": "string",
       "defaultValue": "[resourceGroup().name]"
-    },
-    "containerRegistryOption": {
-      "type": "string",
-      "defaultValue": "new",
-      "allowedValues": [
-        "new",
-        "existing",
-        "none"
-      ],
-      "metadata": {
-        "description": "Determines whether or not a new container registry should be provisioned."
-      }
     },
     "containerRegistryName": {
       "type": "string",
@@ -226,7 +213,7 @@
         "storageAccount": "[variables('storageAccount')]",
         "keyVault": "[variables('keyVault')]",
         "applicationInsights": "[variables('applicationInsights')]",
-        "containerRegistry": "[if(not(equals(parameters('containerRegistryOption'), 'none')), variables('containerRegistry'), json('null'))]",
+        "containerRegistry": "[variables('containerRegistry')]",
         "adbWorkspace": "[parameters('adbWorkspace')]",
         "encryption": {
           "status": "[parameters('encryption_status')]",
