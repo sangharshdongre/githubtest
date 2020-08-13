@@ -95,7 +95,7 @@
     },
     "adbWorkspace": {
       "type": "string",
-      "defaultValue": "[resourceId('subscription().id', 'resourceGroup().name', 'Microsoft.Databricks/workspaces', 'aipadbwrkspce')]",
+      "defaultValue": "[resourceId('resourceGroup().name', 'Microsoft.Databricks/workspaces', 'aipadbwrkspce')]",
       "metadata": {
         "description": "Azure Databrick workspace to be linked to the workspace"
       }
@@ -124,7 +124,7 @@
     },
     "cmk_keyvault":{
       "type": "string",
-      "defaultValue": "[resourceId('subscription().id', 'resourceGroup().name', 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+      "defaultValue": "[resourceId('resourceGroup().name', 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
       "metadata": {
         "description": "Specifies the customer managed keyVault arm id."
       }
