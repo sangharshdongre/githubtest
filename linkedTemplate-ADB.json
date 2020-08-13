@@ -46,8 +46,8 @@
     ],
     "outputs": {
       "workspace": {
-        "type": "string",
-        "value": "[parameters('workspaceName')]"
+        "type": "object",
+        "value": "[reference(parameters('workspaceName'))]"
       }
     }
   }
