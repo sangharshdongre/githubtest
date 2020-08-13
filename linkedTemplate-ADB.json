@@ -46,8 +46,8 @@
     ],
     "outputs": {
       "adbWorkspace": {
-        "type": "object",
-        "value": "[reference(parameters('workspaceName')).outputs.adbWorkspace.value]"
+        "type": "string",
+        "value": "[reference(parameters('workspaceName')).value]"
       }
     }
   }
