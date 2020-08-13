@@ -29,7 +29,7 @@
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "[concat('sa',uniqueString(resourceGroup().id, parameters('workspaceName')))]",
+      "defaultValue": "[concat('mlstoracc',uniqueString(resourceGroup().id, parameters('workspaceName')))]",
       "metadata": {
         "description": "Name of the storage account."
       }
@@ -64,7 +64,7 @@
     },
     "applicationInsightsName": {
       "type": "string",
-      "defaultValue": "[concat('ai',uniqueString(resourceGroup().id, parameters('workspaceName')))]",
+      "defaultValue": "[concat('mlappinsights',uniqueString(resourceGroup().id, parameters('workspaceName')))]",
       "metadata": {
         "description": "Name of ApplicationInsights."
       }
@@ -75,7 +75,7 @@
     },
     "containerRegistryName": {
       "type": "string",
-      "defaultValue": "[concat('cr',uniqueString(resourceGroup().id, parameters('workspaceName')))]",
+      "defaultValue": "[concat('contreg',uniqueString(resourceGroup().id, parameters('workspaceName')))]",
       "metadata": {
         "description": "The container registry bind to the workspace."
       }
@@ -95,7 +95,6 @@
     },
     "adbWorkspace": {
       "type": "string",
-      "defaultValue": "[resourceId('resourceGroup().name', 'Microsoft.Databricks/workspaces', 'aipadbwrkspce')]",
       "metadata": {
         "description": "Azure Databrick workspace to be linked to the workspace"
       }
