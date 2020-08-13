@@ -46,7 +46,7 @@
     ],
     "outputs": {
       "workspace": {
-        "type": "string",
+        "type": "object",
         "value": "[reference(resourceId('Microsoft.Databricks/workspaces',parameters('workspaceName')))]"
       }
     }
