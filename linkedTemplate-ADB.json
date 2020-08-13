@@ -45,9 +45,9 @@
       }
     ],
     "outputs": {
-      "workspace": {
+      "adbWorkspace": {
         "type": "object",
-        "value": "[reference(resourceId('Microsoft.Databricks/workspaces',parameters('workspaceName')))]"
+        "value": "[reference(deployment().name).outputs.workspaces.value]"
       }
     }
   }
