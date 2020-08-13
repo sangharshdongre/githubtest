@@ -92,7 +92,21 @@
               "description": "Specifies whether the key vault is a standard vault or a premium vault."
             }
         },
-        "secretsObject": {
+        "sqlDBSecretsObject": {
+            "type": "secureObject",
+            "defaultValue": {
+              "secrets": [
+                {
+                  "secretName": "aipsecret1",
+                  "secretValue": "[concat('Aip_P@$$w0rd!')]"
+                }
+              ]
+            },
+            "metadata": {
+              "description": "Specifies all secrets {\"secretName\":\"\",\"secretValue\":\"\"} wrapped in a secure object."
+            }
+        },
+        "mlSecretsObject": {
             "type": "secureObject",
             "defaultValue": {
               "secrets": [
@@ -108,65 +122,83 @@
         }
     },
 	"variables": {
-        "keyVaultName": "[concat(parameters('keyVaultName'))]"
-    },
+      "keyVaultName": "[concat(parameters('keyVaultName'))]"
+  },
 	"resources": [
-        {
-            "type": "Microsoft.KeyVault/vaults",
-            "name": "[variables('keyVaultName')]",
-            "location": "[parameters('location')]",
-            "apiVersion": "2016-10-01",
-            "tags": {
-                "displayName": "KeyVault"
-            },
-            "properties": {
-                "enabledForDeployment": "[parameters('enabledForDeployment')]",
-                "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
-                "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
-                "tenantId": "[parameters('tenantId')]",
-                "accessPolicies": [
-                    {
-                        "objectId": "[parameters('objectId')]",
-                        "tenantId": "[parameters('tenantId')]",
-                        "permissions": {
-                            "keys": "[parameters('keysPermissions')]",
-                            "secrets": "[parameters('secretsPermissions')]"
-                        }
-                    }
-                ],
-                "sku": {
-                    "name": "[parameters('skuName')]",
-                    "family": "A"
-                },
-                "networkAcls": {
-                    "value": {
-                        "defaultAction": "Allow",
-                        "bypass": "AzureServices"
-                    }
-                }
-            }
-        },
+      {
+          "type": "Microsoft.KeyVault/vaults",
+          "name": "[variables('keyVaultName')]",
+          "location": "[parameters('location')]",
+          "apiVersion": "2016-10-01",
+          "tags": {
+              "displayName": "KeyVault"
+          },
+          "properties": {
+              "enabledForDeployment": "[parameters('enabledForDeployment')]",
+              "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+              "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
+              "tenantId": "[parameters('tenantId')]",
+              "accessPolicies": [
+                  {
+                      "objectId": "[parameters('objectId')]",
+                      "tenantId": "[parameters('tenantId')]",
+                      "permissions": {
+                          "keys": "[parameters('keysPermissions')]",
+                          "secrets": "[parameters('secretsPermissions')]"
+                      }
+                  }
+              ],
+              "sku": {
+                  "name": "[parameters('skuName')]",
+                  "family": "A"
+              },
+              "networkAcls": {
+                  "value": {
+                      "defaultAction": "Allow",
+                      "bypass": "AzureServices"
+                  }
+              }
+          }
+      },
         {
             "type": "Microsoft.KeyVault/vaults/secrets",
-            "name": "[concat(parameters('keyVaultName'), '/', parameters('secretsObject').secrets[copyIndex()].secretName)]",
+            "name": "[concat(parameters('keyVaultName'), '/', parameters('sqlDBSecretsObject').secrets[copyIndex()].secretName)]",
             "apiVersion": "2016-10-01",
             "dependsOn": [
                 "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
             ],
             "copy": {
                 "name": "secretsCopy",
-                "count": "[length(parameters('secretsObject').secrets)]"
+                "count": "[length(parameters('sqlDBSecretsObject').secrets)]"
             },
             "properties": {
-                "value": "[parameters('secretsObject').secrets[copyIndex()].secretValue]",
+                "value": "[parameters('sqlDBSecretsObject').secrets[copyIndex()].secretValue]",
                 "attributes": {
                   "enabled": true
                 }
             }
+        },
+        {
+          "type": "Microsoft.KeyVault/vaults/secrets",
+          "name": "[concat(parameters('keyVaultName'), '/', parameters('mlSecretsObject').secrets[copyIndex(1)].secretName)]",
+          "apiVersion": "2016-10-01",
+          "dependsOn": [
+              "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
+          ],
+          "copy": {
+              "name": "secretsCopy",
+              "count": "[length(parameters('mlSecretsObject').secrets)]"
+          },
+          "properties": {
+              "value": "[parameters('mlSecretsObject').secrets[copyIndex(1)].secretValue]",
+              "attributes": {
+                "enabled": true
+              }
+          }
         }
     ],
 	"outputs": {
-		"aipkeyvault": {
+		"aipKeyVault": {
 			"value": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
 			"type" : "string"
 		}
