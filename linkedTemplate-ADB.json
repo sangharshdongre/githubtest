@@ -47,7 +47,7 @@
     "outputs": {
       "adbWorkspace": {
         "type": "string",
-        "value": "[reference(parameters('workspaceName')).value]"
+        "value": "aipadbwrkspce"
       }
     }
   }
