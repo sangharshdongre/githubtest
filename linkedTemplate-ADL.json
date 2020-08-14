@@ -79,9 +79,9 @@
         }
     ],
     "outputs": {
-        "aipAdl": {
+        "adlResourceId": {
             "type": "string",
-            "value": "[variables('adlstorageaccname')]"
+            "value": "[resourceId('Microsoft.Storage/storageAccounts',variables('adlstorageaccname'))]"
         }
     }
 }

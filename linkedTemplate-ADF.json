@@ -25,5 +25,11 @@
             },
             "properties": {}
         }
-    ]
+    ],
+    "outputs": {
+        "adfResourceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.DataFactory/factories', parameters('adfname'))]"
+        }
+    }
 }

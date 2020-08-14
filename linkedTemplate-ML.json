@@ -224,5 +224,11 @@
         "hbiWorkspace": "[parameters('confidential_data')]"
       }
     }
-  ]
+  ],
+  "outputs": {
+    "mlResourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('workspaceName'))]"
+    }
+  }
 }

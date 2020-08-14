@@ -114,20 +114,6 @@
             "metadata": {
               "description": "Specifies all secrets {\"secretName\":\"\",\"secretValue\":\"\"} wrapped in a secure object."
             }
-        },
-        "mlSecretsObject": {
-            "type": "secureObject",
-            "defaultValue": {
-              "secrets": [
-                {
-                  "secretName": "aipsecret1",
-                  "secretValue": "[concat('Aip_P@ssw0rd!')]"
-                }
-              ]
-            },
-            "metadata": {
-              "description": "Specifies all secrets {\"secretName\":\"\",\"secretValue\":\"\"} wrapped in a secure object."
-            }
         }
     },
 	"variables": {
@@ -187,28 +173,10 @@
                   "enabled": true
                 }
             }
-        },
-        {
-          "type": "Microsoft.KeyVault/vaults/secrets",
-          "name": "[concat(parameters('keyVaultName'), '/', parameters('mlSecretsObject').secrets[copyIndex()].secretName)]",
-          "apiVersion": "2016-10-01",
-          "dependsOn": [
-              "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
-          ],
-          "copy": {
-              "name": "secretsCopy",
-              "count": "[length(parameters('mlSecretsObject').secrets)]"
-          },
-          "properties": {
-              "value": "[parameters('mlSecretsObject').secrets[copyIndex()].secretValue]",
-              "attributes": {
-                "enabled": true
-              }
-          }
         }
     ],
 	"outputs": {
-		"aipKeyVault": {
+		"kvResourceId": {
 			"value": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
 			"type" : "string"
 		}
