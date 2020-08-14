@@ -45,7 +45,7 @@
       }
     ],
     "outputs": {
-      "adbWorkspace": {
+      "adbResourceId": {
         "type": "string",
         "value": "[resourceId('Microsoft.Databricks/workspaces',parameters('workspaceName'))]"
       }

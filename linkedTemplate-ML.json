@@ -95,7 +95,6 @@
     },
     "adbWorkspace": {
       "type": "string",
-      "defaultValue": "aipadbwrkspce",
       "metadata": {
         "description": "Azure Databrick workspace to be linked to the workspace"
       }
